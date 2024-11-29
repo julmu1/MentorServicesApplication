@@ -1,0 +1,14 @@
+{% extends 'mentorapp/base_template.html' %}
+
+{% block content %}
+
+<h2>Profile Page</h2>
+
+{% if request.user.is_staff %}
+    <p>I am a customer</p>
+
+{% endif %}
+
+{{request.user}}
+
+{% endblock %}

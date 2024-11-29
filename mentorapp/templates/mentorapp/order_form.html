@@ -1,0 +1,26 @@
+{% extends 'mentorapp/base_template.html' %}
+{% load static %}
+
+{% block content %}
+
+{% comment %} <br>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-body"> {% endcomment %}
+            <form action="" method="POST">
+
+                {% csrf_token %}
+                {% comment %} {{ formset.management_form }}
+                {% for form in formset %} {% endcomment %}
+                 
+                        {{form}}
+                         {% comment %} <hr>
+                {% endfor %} {% endcomment %}
+
+                <input type="submit" name="Submit">
+            </form>
+        {% comment %} </div>
+    </div>
+</div> {% endcomment %}
+
+{% endblock %}
