@@ -36,5 +36,38 @@
         </div>
     </div>
 </div>
+{% comment %} <div class="col">
+    <div class="col-md">
+        <div class="card text-center text-black mb-3" id="order.id">
+            <div class="card-header">
+                <h5 class="card-title">Total of Current Courses requested</h5>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">{{total_orders}}</h3>
+            </div>
+        </div>
+    </div> {% endcomment %}
+</div>
+<div class="col">
+    <div class="col-md">
+        <div class="card text-center text-black mb-3" id="order.id">
+            <div class="card-header">
+                <h5 class="card-title">Total of Current Users of Mentor Training</h5>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">{{total_customers}}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% comment %} <p>Total Orders: {{total_orders}}</p>
+<p>Total Customers: {{total_customers}}</p> {% endcomment %}
+{% comment %} <ul>
+    {% for order in orders %}
+    <li>{{ order.id}} - {{ order.status}}</li>
+    {% endfor %}
+<ul> {% endcomment %}
+
 
 

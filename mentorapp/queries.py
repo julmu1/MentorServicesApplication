@@ -18,4 +18,4 @@ courses = Courses.objects.filter(category = 'dev')
 leastToGreatest = Courses.objects.all().order_by('id')
 greatestToLeast = Courses.objects.all().order_by('_id')
 
-coursesFiltered = Product.objects.filter(tags_name="")
+coursesFiltered = Courses.objects.filter(tags_name="")

@@ -11,7 +11,7 @@
             <h5>Customer: {{customer.name}}</h5>
             <hr>
             {% comment %} <a class="btn btn-outline-info btn-sm btn-block" href="{% url 'profile' %}">Update Customer</a> {% endcomment %}
-            <a class="btn btn-outline-info btn-sm btn-block" href="{% url 'create_order' customer.id%}">Place Order</a>
+            <a class="btn btn-info btn-sm btn-block" href="{% url 'create_order' customer.id%}">Add a Course to your Portfolio</a>
         </div>
     </div>
 
@@ -37,12 +37,12 @@
 <div class="row">
     <div class="col">
         <div class="card card-body">
-
+{% comment %} 
             <form method="get">
                 {{myFilter.form}}
 
             <button class="btn btn-primary" type="submit">Search</button>
-            </form>
+            </form> {% endcomment %}
 
         </div>
     </div>

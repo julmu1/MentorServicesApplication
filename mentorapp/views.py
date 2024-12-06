@@ -22,10 +22,13 @@ def loginPage(request):
         if user is not None:
             login(request, user)
             return redirect('home')
+        elif not User.objects.filter(username=username).exists():
+            messages.error(request, 'Account does not exist.')
         else:
-            messages.info(request, 'Username or Password is incorrect or account does not exist')
+            messages.error(request, 'Username or Password is incorrect or account does not exist')
     context = {}
     return render(request, 'mentorapp/login.html', context)
+
 
 def logoutUser(request):
     logout(request)
@@ -38,12 +41,24 @@ def registerPage(request):
         form = CreateUserForm(request.POST)
         if form.is_valid():
             user = form.save()
+            #adding new lines for linking new user to customer group and instance
+            if not Customer.objects.filter(user=user).exists():
+                Customer.objects.create(
+                    user=user,
+                    name=user.username,
+                    email=user.email
+                )
+            group = Group.objects.get(name='customer')
+            user.groups.add(group)
+            
+            # Customer.objects.create(user=user, name=user.username, email=user.email)
+            
             # Customer.objects.create(user=user, name=user.username, email=user.email)
             # username = form.cleaned_data.get('username')
-            messages.success(request, f'An account was created for {{user}}')
+            messages.success(request, f'An account was created for {{user.username}}')
             return redirect('login')
-    else:
-        form=CreateUserForm()
+    # else:
+    #     form=CreateUserForm()
         
     context = {'form': form}
     return render(request, 'mentorapp/register.html', context)
@@ -54,18 +69,35 @@ def registerPage(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'customer'])
+# def home(request):
+#     orders = Order.objects.all().order_by('id')
+#     customers = Customer.objects.all()
+#     # total_customers = customers.count()
+#     # total_orders = orders.count()
+#     pending = orders.filter(status='Pending')
+#     completed = orders.filter(status='Completed')
+    
+#     context = {'orders': orders, 'customers' : customers,
+#                'pending': pending, 
+#             #    'total_orders': total_orders,
+#                'completed': completed}
+#     return render(request, 'mentorapp/dashboard.html', context)
+
 def home(request):
-    orders = Order.objects.all().order_by('id')
-    customers = Customer.objects.all()
+    orders = Order.objects.select_related('customer').all()
+    customers = Customer.objects.prefetch_related('order_set').all()
     # total_customers = customers.count()
     # total_orders = orders.count()
-    pending = orders.filter(status='Pending')
-    completed = orders.filter(status='Completed')
+    # pending = orders.filter(status='Pending')
+    # completed = orders.filter(status='Completed')
     
     context = {'orders': orders, 'customers' : customers,
-               'pending': pending, 
-            #    'total_orders': total_orders,
-               'completed': completed}
+               'pending': orders.filter(status='Pending'), 
+               'total_orders': orders.count(),
+               'completed': orders.filter(status='Completed'),
+                'total_customers' : customers.count()
+                }
+               
     return render(request, 'mentorapp/dashboard.html', context)
 
 # @login_required(login_url='login')
@@ -98,7 +130,8 @@ def create_courses(request):
     if request.method == 'POST':
         form = CoursesForm(request.POST)
         if form.is_valid():
-            form.save
+            #courses were not being saved as form.save did not have closing parentheses
+            form.save()
             return redirect ('courses')
     return render(request, 'mentorapp/create_courses.html', context)
 
@@ -117,6 +150,26 @@ def customer(request, pk):
             #    'order_count': order_count, 
                'myFilter': myFilter}
     return render(request,'mentorapp/customer.html', context)
+
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin'])
+# def customer(request, pk):
+#     try:
+#         customer = Customer.objects.prefetch_related('order_set').get(id=pk)
+#     except Customer.DoesNotExist:
+#         messages.error(request, 'Customer not found. ')
+#         return redirect('home')
+    
+#     orders = customer.order_set.all()
+#     # order_count = orders.count()
+#     myFilter = OrderFilter(request.GET, queryset=orders)
+#     # orders = myFilter.qs
+    
+#     context = {'customer': customer, 
+#                'orders': myFilter.qs, 
+#                'order_count': orders_count(), 
+#                'myFilter': myFilter}
+#     return render(request,'mentorapp/customer.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer', 'admin'])
