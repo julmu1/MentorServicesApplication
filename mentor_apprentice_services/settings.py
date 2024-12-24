@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-z$$o%a#$l-s*gr-&bb$d^$-14-y^vznjjq6)jj$unarot#4k9r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['mentorservicesapplication-3.onrender.com', 'localhost', '127.0.0.1']
 
@@ -74,6 +74,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mentor_apprentice_services.wsgi.application'
 
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

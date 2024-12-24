@@ -67,15 +67,20 @@ def registerPage(request):
 
 
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'customer'])
+# @login_required(login_url='login')
 # def home(request):
-#     orders = Order.objects.all().order_by('id')
-#     customers = Customer.objects.all()
-#     # total_customers = customers.count()
-#     # total_orders = orders.count()
-#     pending = orders.filter(status='Pending')
-#     completed = orders.filter(status='Completed')
+#     if request.user.groups.filter(name='admin').exists():
+#         orders = Order.objects.all()
+#         customers = Customer.objects.all()
+    
+#         pending = orders.filter(status='Pending')
+#         completed = orders.filter(status='Completed')
+#     else:
+#         customer = request.user.customer
+#         orders = Customer.order_set.all()
+#         customers = Customer.objects.filter(id=customer.id)
+#         pending = orders.filter(status='Pending')
+#         completed = orders.filter(status='Completed')
     
 #     context = {'orders': orders, 'customers' : customers,
 #                'pending': pending, 
@@ -83,6 +88,8 @@ def registerPage(request):
 #                'completed': completed}
 #     return render(request, 'mentorapp/dashboard.html', context)
 
+# this is the current home that works
+@login_required(login_url='login')
 def home(request):
     orders = Order.objects.select_related('customer').all()
     customers = Customer.objects.prefetch_related('order_set').all()
@@ -135,6 +142,7 @@ def create_courses(request):
             return redirect ('courses')
     return render(request, 'mentorapp/create_courses.html', context)
 
+#this is the current customer that works below
 
 @login_required(login_url='login')
 # @allowed_users(allowed_roles=['admin'])
@@ -152,13 +160,16 @@ def customer(request, pk):
     return render(request,'mentorapp/customer.html', context)
 
 # @login_required(login_url='login')
-# @allowed_users(allowed_roles=['admin'])
-# def customer(request, pk):
-#     try:
-#         customer = Customer.objects.prefetch_related('order_set').get(id=pk)
-#     except Customer.DoesNotExist:
-#         messages.error(request, 'Customer not found. ')
-#         return redirect('home')
+# @allowed_users(allowed_roles=['admin', 'customer'])
+# def customer(request, pk=None):
+#     if request.user.groups.filter(nam='admin').exists():
+#         customer= Customer.objects.get(id=pk)
+#     else:
+#         customer = request.user.customer
+#         if pk and cusstomer.id != pk:
+#             messages.error(request, 'You are not authorised to view this profile.')
+#             return redirect ('home')
+        
     
 #     orders = customer.order_set.all()
 #     # order_count = orders.count()
@@ -167,7 +178,7 @@ def customer(request, pk):
     
 #     context = {'customer': customer, 
 #                'orders': myFilter.qs, 
-#                'order_count': orders_count(), 
+#             #    'order_count': orders_count(), 
 #                'myFilter': myFilter}
 #     return render(request,'mentorapp/customer.html', context)
 
@@ -177,22 +188,7 @@ def profile(request):
     return render(request, 'mentorapp/customer.html')
     
 
-@login_required(login_url='login')
-# @allowed_users(allowed_roles=['admin'])
-# def createOrder(request, pk):
-#     OrderFormSet = inlineformset_factory(Customer, Order, fields=('courses', 'status'), extra=5)
-#     customer = Customer.objects.get(id=pk)
-#     formset = OrderFormSet(queryset=Order.objects.none(), instance=customer)
-#     # form = OrderForm(initial={'customer': customer})
-#     if request.method == 'POST':
-#         formset = OrderFormSet(request.POST, instance=customer)
-#         if formset.is_valid():
-#             formset.save()
-#             return redirect('customer', pk)
-        
-#     context={'formset': formset}
-    
-#     return render(request, 'mentorapp/order_form.html', context)
+
 
 def createOrder(request, pk):
     customer = Customer.objects.get(id=pk)
@@ -205,6 +201,27 @@ def createOrder(request, pk):
     context = {'form' : form}
     
     return render(request, 'mentorapp/order_form.html', context)
+
+# @login_required(login_url='login')
+# # @allowed_users(allowed_roles=['admin'])
+# def updateOrder(request, pk):
+#     order = Order.objects.get(id=pk)
+#     if not request.user.groups.filter(nam-'admin').exists():
+#         if order.customer.user != request.user:
+#             messages.error(request, 'You are not authorized to update this order.')
+#             return redirect('home')
+        
+#     form = OrderForm(instance=order)
+    
+#     if request.method == 'POST':
+#         form = OrderForm(request.POST, instance=order)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('home')
+        
+#     context = {'form': form}
+
+#     return render(request, 'mentorapp/order_form.html', context)
 
 @login_required(login_url='login')
 # @allowed_users(allowed_roles=['admin'])
@@ -221,6 +238,7 @@ def updateOrder(request, pk):
     context = {'form': form}
 
     return render(request, 'mentorapp/order_form.html', context)
+
 
 @login_required(login_url='login')
 # @allowed_users(allowed_roles=['admin'])
