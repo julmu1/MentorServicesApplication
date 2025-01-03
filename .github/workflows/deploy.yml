@@ -147,9 +147,9 @@ jobs:
       run: |
         python manage.py test
 
-    # Step 6: Deploy to Render
-    - name: Install Render CLI
-       run: curl -fsSL https://render.com/deploy | bash
-      env:
-        RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
-        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+    # # Step 6: Deploy to Render
+    # - name: Install Render CLI
+    #    run: curl -fsSL https://render.com/deploy | bash
+    #   env:
+    #     RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+    #     RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
