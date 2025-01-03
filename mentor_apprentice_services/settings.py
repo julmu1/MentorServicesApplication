@@ -27,7 +27,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['mentorservicesapplication-3.onrender.com', 'localhost', '127.0.0.1']
 
-
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # Application definition
 
 INSTALLED_APPS = [

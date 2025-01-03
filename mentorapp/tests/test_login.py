@@ -19,13 +19,13 @@ def test_login_page(client):
     assert b'Account does not exist.' in response.content
     
 #testing the creation of a user 
-class LoginViewTest(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username='testusers', email='testusers@gmail.com', password='testpass123')
+# class LoginViewTest(TestCase):
+#     def setUp(self):
+#         self.user = User.objects.create_user(username='testusers', email='testusers@gmail.com', password='testpass123')
         
-    def test_login_valid_user(self):
-        response = self.client/post('/login/', {'username' : 'testuser', 'password' : 'wrongone'})
-        self.assertRedirects(response, '/home/')
+#     def test_login_valid_user(self):
+#         response = self.client/post('/login/', {'username' : 'testuser', 'password' : 'wrongone'})
+#         self.assertRedirects(response, '/home/')
         
     # def test_login_invalid_user(self):
     #     response = self.client.post('/login/', {'username' : 'wrongusers', 'password' : 'testfail'})

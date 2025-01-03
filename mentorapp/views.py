@@ -93,10 +93,6 @@ def registerPage(request):
 def home(request):
     orders = Order.objects.select_related('customer').all()
     customers = Customer.objects.prefetch_related('order_set').all()
-    # total_customers = customers.count()
-    # total_orders = orders.count()
-    # pending = orders.filter(status='Pending')
-    # completed = orders.filter(status='Completed')
     
     context = {'orders': orders, 'customers' : customers,
                'pending': orders.filter(status='Pending'), 
@@ -122,27 +118,6 @@ def home(request):
 
 
 
-# @login_required(login_url='login')
-# @allowed_users(allowed_roles=['admin'])
-def courses(request):
-    courses = Courses.objects.all()
-    return render(request,'mentorapp/courses.html', {'courses': courses})
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin'])
-def create_courses(request):
-    form = CoursesForm()
-    context = {'form' : form}
-    
-    if request.method == 'POST':
-        form = CoursesForm(request.POST)
-        if form.is_valid():
-            #courses were not being saved as form.save did not have closing parentheses
-            form.save()
-            return redirect ('courses')
-    return render(request, 'mentorapp/create_courses.html', context)
-
-#this is the current customer that works below
 
 @login_required(login_url='login')
 # @allowed_users(allowed_roles=['admin'])
@@ -159,28 +134,6 @@ def customer(request, pk):
                'myFilter': myFilter}
     return render(request,'mentorapp/customer.html', context)
 
-# @login_required(login_url='login')
-# @allowed_users(allowed_roles=['admin', 'customer'])
-# def customer(request, pk=None):
-#     if request.user.groups.filter(nam='admin').exists():
-#         customer= Customer.objects.get(id=pk)
-#     else:
-#         customer = request.user.customer
-#         if pk and cusstomer.id != pk:
-#             messages.error(request, 'You are not authorised to view this profile.')
-#             return redirect ('home')
-        
-    
-#     orders = customer.order_set.all()
-#     # order_count = orders.count()
-#     myFilter = OrderFilter(request.GET, queryset=orders)
-#     # orders = myFilter.qs
-    
-#     context = {'customer': customer, 
-#                'orders': myFilter.qs, 
-#             #    'order_count': orders_count(), 
-#                'myFilter': myFilter}
-#     return render(request,'mentorapp/customer.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer', 'admin'])
@@ -273,3 +226,26 @@ def mentorappSettings(request):
             return redirect('home')
     
     return render(request, 'mentorapp/mentorapp_settings.html', context)
+
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin'])
+def courses(request):
+    courses = Courses.objects.all()
+    return render(request,'mentorapp/courses.html', {'courses': courses})
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def create_courses(request):
+    form = CoursesForm()
+    context = {'form' : form}
+    
+    if request.method == 'POST':
+        form = CoursesForm(request.POST)
+        if form.is_valid():
+            #courses were not being saved as form.save did not have closing parentheses
+            form.save()
+            return redirect ('courses')
+    return render(request, 'mentorapp/create_courses.html', context)
+
+#this is the current customer that works below
+
