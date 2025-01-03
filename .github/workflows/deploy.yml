@@ -145,7 +145,7 @@ jobs:
     # Step 5: Run tests
     - name: Run tests
       run: |
-        python manage.py test
+        python manage.py tests
 
     # # Step 6: Deploy to Render
     # - name: Install Render CLI
