@@ -50,45 +50,14 @@ def registerPage(request):
                 )
             group = Group.objects.get(name='customer')
             user.groups.add(group)
-            
-            # Customer.objects.create(user=user, name=user.username, email=user.email)
-            
-            # Customer.objects.create(user=user, name=user.username, email=user.email)
-            # username = form.cleaned_data.get('username')
             messages.success(request, f'An account was created for {{user.username}}')
             return redirect('login')
-    # else:
-    #     form=CreateUserForm()
         
     context = {'form': form}
     return render(request, 'mentorapp/register.html', context)
 
 
-
-
-
-# @login_required(login_url='login')
-# def home(request):
-#     if request.user.groups.filter(name='admin').exists():
-#         orders = Order.objects.all()
-#         customers = Customer.objects.all()
-    
-#         pending = orders.filter(status='Pending')
-#         completed = orders.filter(status='Completed')
-#     else:
-#         customer = request.user.customer
-#         orders = Customer.order_set.all()
-#         customers = Customer.objects.filter(id=customer.id)
-#         pending = orders.filter(status='Pending')
-#         completed = orders.filter(status='Completed')
-    
-#     context = {'orders': orders, 'customers' : customers,
-#                'pending': pending, 
-#             #    'total_orders': total_orders,
-#                'completed': completed}
-#     return render(request, 'mentorapp/dashboard.html', context)
-
-# this is the current home that works
+# this is the current home method after some reworking
 @login_required(login_url='login')
 def home(request):
     orders = Order.objects.select_related('customer').all()
@@ -102,22 +71,6 @@ def home(request):
                 }
                
     return render(request, 'mentorapp/dashboard.html', context)
-
-# @login_required(login_url='login')
-# @allowed_users(allowed_roles=['customer'])
-# def userPage(request):
-#     orders = request.user.customer.order_set.all()
-    
-#     total_orders = orders.count()
-#     pending = orders.filter(status='Pending').count()
-#     completed = orders.filter(status='Completed').count()
-    
-#     context = {'orders' : orders, 'pending': pending, 'total_orders': total_orders,
-#                'completed': completed}
-#     return render(request, 'mentorapp/user.html', context)
-
-
-
 
 @login_required(login_url='login')
 # @allowed_users(allowed_roles=['admin'])
@@ -134,15 +87,11 @@ def customer(request, pk):
                'myFilter': myFilter}
     return render(request,'mentorapp/customer.html', context)
 
-
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer', 'admin'])
 def profile(request):
     return render(request, 'mentorapp/customer.html')
     
-
-
-
 def createOrder(request, pk):
     customer = Customer.objects.get(id=pk)
     form = OrderForm()
@@ -155,26 +104,7 @@ def createOrder(request, pk):
     
     return render(request, 'mentorapp/order_form.html', context)
 
-# @login_required(login_url='login')
-# # @allowed_users(allowed_roles=['admin'])
-# def updateOrder(request, pk):
-#     order = Order.objects.get(id=pk)
-#     if not request.user.groups.filter(nam-'admin').exists():
-#         if order.customer.user != request.user:
-#             messages.error(request, 'You are not authorized to update this order.')
-#             return redirect('home')
-        
-#     form = OrderForm(instance=order)
-    
-#     if request.method == 'POST':
-#         form = OrderForm(request.POST, instance=order)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('home')
-        
-#     context = {'form': form}
 
-#     return render(request, 'mentorapp/order_form.html', context)
 
 @login_required(login_url='login')
 # @allowed_users(allowed_roles=['admin'])
@@ -192,25 +122,42 @@ def updateOrder(request, pk):
 
     return render(request, 'mentorapp/order_form.html', context)
 
-
+#adding method to ensure only admin can delete an order and an error is triggered if a regular user tries
 @login_required(login_url='login')
-# @allowed_users(allowed_roles=['admin'])
 def deleteOrder(request, pk):
+    # Fetch the order by primary key
     order = Order.objects.get(id=pk)
+    
+    # Check if the logged-in user is an admin
+    if not request.user.is_staff:
+        messages.error(request, "You do not have permission to delete this order.")
+
+        # If the user is not an admin, redirect or show a permission error
+        return redirect('home')  # Redirect to home page or show a 'permission denied' message
+    
     if request.method == "POST":
+        # Delete the order
         order.delete()
+        messages.success(request, "Order deleted successfully.")
+
         return redirect('home')
     
-    context = {'item' : order}
+    # Render confirmation page
+    context = {'item': order}
     return render(request, 'mentorapp/delete_order.html', context)
 
-# def deleteCourse(request, pk): 
-#     course = Courses.objects.get(id=pk)
-#     if request.method =='POST':
-#         course.delete()
-#         return redirect('Courses')
-#     context = {'course': course }
-#     return render(request, 'delete_course_confirm.html', context)
+
+
+# @login_required(login_url='login')
+# # @allowed_users(allowed_roles=['admin'])
+# def deleteOrder(request, pk):
+#     order = Order.objects.get(id=pk)
+#     if request.method == "POST":
+#         order.delete()
+#         return redirect('home')
+    
+#     context = {'item' : order}
+#     return render(request, 'mentorapp/delete_order.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer'])
@@ -247,5 +194,12 @@ def create_courses(request):
             return redirect ('courses')
     return render(request, 'mentorapp/create_courses.html', context)
 
-#this is the current customer that works below
+#A method to delete a course which currently has errors and needs debugging 
+# def deleteCourse(request, pk): 
+#     course = Courses.objects.get(id=pk)
+#     if request.method =='POST':
+#         course.delete()
+#         return redirect('Courses')
+#     context = {'course': course }
+#     return render(request, 'delete_course_confirm.html', context)
 
