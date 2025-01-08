@@ -12,17 +12,17 @@
         <a class="nav-link" href="{%url 'home' %}">Portfolio Dashboard</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{%url 'courses' %}">Courses</a>
+        <a class="nav-link" style="color: white;" href="{%url 'courses' %}">Courses</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'mentorapp_settings' %}">Profile</a>
+        <a class="nav-link" style="color: white;" href="{% url 'mentorapp_settings' %}">Profile</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'create_courses' %}">Add a Course</a>
+        <a class="nav-link" style="color: white;" href="{% url 'create_courses' %}">Add a Course</a>
       </li> 
       {% if request.user.is_superuser %}
-      <li class="nav-link">
-          <a href="{% url 'admin:index' %}" class="nav-link">Admin Panel</a>
+      <li class="nav-item">
+        <a class="nav-link" style="color: white;" href="{% url 'admin:index' %}" class="nav-link">Admin Panel</a>
       </li>
       {% endif %}
     </ul>
@@ -34,7 +34,7 @@
       </li>
     {% endif %}
    {% endcomment %}
-      <li class="nav-item" style="color: lightgrey;">
+      <li class="nav-item" style="color: white;">
         <span>Welcome to the Mentor Led Training Portal {{request.user|title}}</span>
         <a href="{% url 'logout' %}" class="btn btn-warning my-2 my-sm-0">Logout</a>
       </li>
