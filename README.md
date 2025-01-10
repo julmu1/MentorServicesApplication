@@ -19,9 +19,22 @@ Screenshots of key features
 
 ![Login Screenshot](screenshots/Login.png)
 ![Register Screenshot](screenshots/Register.png)
+![Edit Screenshot](screenshots/edit.png)
+![Dashboard Screenshot](screenshots/Dashboard.png)
+![Regular_user_delete Screenshot](screenshots/Regular_user_delete.png)
+![Admin_delete_successful Screenshot](screenshots/Admin_delete_successful.png)
 
 
 Running the Application
+
+Running the applocation from Render
+https://mentorservicesapplication-3.onrender.com 
+Login as an Admin for testing purposes 
+- Username = julmu
+- Password = peaches
+# note the password was created as a superuser, since the aplication has developed
+# passwords created must conform with the rules for example not common passwords and must be more complex or will give an error
+
 Locally 
 Currently the latest changes are deployed on the Develop branch 
 
@@ -42,11 +55,6 @@ Currently the latest changes are deployed on the Develop branch
 4. Run the Application
    The application is available at http://127.0.0.1:8000/.
 
-Running the applocation from Render
-https://mentorservicesapplication-3.onrender.com 
-Login as an Admin for testing purposes 
-- Username = testadmin
-- Password = QAuser123
 
 To create a customer user 
 - from the login url select the Register Here link and create a user
